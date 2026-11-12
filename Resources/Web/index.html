@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b0c0e">
+<meta name="mobile-web-app-capable" content="yes">
+<title>SecondPad</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon-192.png">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body data-page="main">
+
+<div class="shell">
+
+<div class="pager" id="pager">
+<div class="pager-track" id="pagerTrack">
+
+<!-- ═══ Deep Focus (Pomodoro) ═══ states: idle · focus · paused · break -->
+<section class="page" data-page="focus" aria-label="Deep Focus">
+<div class="fp" id="focusPage" data-state="idle" data-ask="">
+
+  <header class="fp-head">
+    <div class="fp-title">
+      <h1>Deep Focus</h1>
+      <p id="fpSub">Start a Pomodoro on the Mac</p>
+    </div>
+    <div class="fp-head-right">
+      <span class="fp-mini-clock" id="fpMiniClock" aria-label="Current time">--:--</span>
+      <div class="fp-sys" id="fpSys" hidden><span class="fp-sys-dot"></span><span id="fpSysText">CPU peak</span></div>
+      <div class="fp-claude" id="fpClaude" hidden><span class="fp-claude-dot"></span><b id="fpClaudeState">Claude</b><span class="fp-claude-act" id="fpClaudeAct"></span></div>
+      <ol class="fp-cycle" id="fpCycle" aria-label="Pomodoros in this cycle"></ol>
+      <div class="fp-status" id="fpStatus"><span class="fp-status-dot"></span><span id="fpStatusText">Ready</span></div>
+    </div>
+  </header>
+
+  <section class="fp-hero" id="fpHero">
+    <div class="fp-clock">
+      <span class="fp-phase" id="fpPhase">Ready</span>
+      <span class="fp-time" id="fpTime">25:00</span>
+      <div class="fp-ask" id="fpAsk">
+        <button type="button" class="fp-ask-no" id="fpAskNo">Skip</button>
+        <button type="button" class="fp-ask-yes" id="fpAskYes">Start break</button>
+      </div>
+      <div class="fp-now" id="fpNow" aria-live="polite">
+        <img class="fp-now-icon" id="fpNowIcon" alt="" hidden>
+        <span class="fp-mono fp-now-mono" id="fpNowMono" hidden></span>
+        <span>You're in <b id="fpNowApp">—</b></span>
+      </div>
+    </div>
+    <div class="fp-breathe" aria-hidden="true">
+      <div class="fp-breathe-ring">
+        <svg class="fp-breathe-arc" viewBox="0 0 100 100"><circle id="fpBreathArc" cx="50" cy="50" r="48" pathLength="100"/></svg>
+        <span class="fp-breathe-orb" id="fpBreathOrb"></span>
+        <b class="fp-breathe-count" id="fpBreathCount"></b>
+      </div>
+      <div class="fp-breathe-copy">
+        <span class="fp-breathe-say" id="fpBreathSay">Breathe in</span>
+        <span class="fp-breathe-hint" id="fpBreathHint">Box breathing · 4-4-4-4</span>
+        <span class="fp-breathe-long">Stand up · stretch · drink water</span>
+      </div>
+    </div>
+    <div class="fp-strip-wrap">
+      <div class="fp-strip" id="fpStrip" role="img" aria-label="Minutes of this session"></div>
+      <div class="fp-strip-foot">
+        <span id="fpStripText">25-minute sessions</span>
+        <span class="fp-key"><i class="fp-key-on"></i>on task<i class="fp-key-off"></i>distracted</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="fp-stats">
+    <article class="fp-card">
+      <header>Purity
+        <svg viewBox="0 0 24 24" class="fp-ico"><path d="M12 3 4 7l8 4 8-4-8-4Z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg>
+      </header>
+      <strong id="fpPurity">—</strong>
+      <div class="fp-meter"><span id="fpPurityBar"></span></div>
+      <p>time actually on task</p>
+    </article>
+    <article class="fp-card">
+      <header>Focus broken
+        <svg viewBox="0 0 24 24" class="fp-ico"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 4 3 17a1.8 1.8 0 0 0 1.6 2.7h14.8A1.8 1.8 0 0 0 21 17L13.7 4a1.8 1.8 0 0 0-3.4 0Z"/></svg>
+      </header>
+      <strong id="fpBreaks">0</strong>
+      <div class="fp-ticks" id="fpBreakTicks"></div>
+      <p id="fpBreaksNote">no slips yet</p>
+    </article>
+    <article class="fp-card">
+      <header>Distracted
+        <svg viewBox="0 0 24 24" class="fp-ico"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </header>
+      <strong id="fpDistracted">0s</strong>
+      <div class="fp-logos" id="fpLogos"></div>
+      <p id="fpMost">nothing yet</p>
+    </article>
+    <article class="fp-card">
+      <header>Today
+        <svg viewBox="0 0 24 24" class="fp-ico"><path d="M6 2h12"/><path d="M6 22h12"/><path d="M8 2c0 5 8 5 8 10s-8 5-8 10"/><path d="M16 2c0 5-8 5-8 10s8 5 8 10"/></svg>
+      </header>
+      <strong id="fpToday">0</strong>
+      <div class="fp-dots" id="fpTodayDots"></div>
+      <p id="fpTodayNote">pomodoros completed</p>
+    </article>
+  </section>
+
+  <section class="fp-bottom">
+    <article class="fp-panel">
+      <header><h2>Where attention went</h2><span id="fpWentNote">this session</span></header>
+      <ul class="fp-went" id="fpWent"></ul>
+      <p class="fp-empty" id="fpWentEmpty">Nothing pulled you away. Keep going.</p>
+    </article>
+    <article class="fp-panel fp-week">
+      <header><h2 id="fpWeekTotal">0h</h2><span>deep work this week</span></header>
+      <div class="fp-bars" id="fpWeek"></div>
+      <p class="fp-week-key"><i class="fp-key-on"></i>70%+ on task<i class="fp-key-off"></i>below</p>
+    </article>
+  </section>
+
+  <div class="fp-paused" aria-hidden="true">Paused</div>
+</div>
+</section>
+
+<!-- ═══ Main page ═══ -->
+<section class="page" data-page="main" aria-label="Dashboard">
+<div class="board">
+
+  <!-- Claude sessions -->
+  <article class="tile tile-claude" id="claudeTile" data-mood="idle">
+    <header class="tile-head">
+      <span class="label">Claude</span>
+      <span class="cc-summary" id="ccSummary"></span>
+    </header>
+    <ul class="cc-list" id="ccList"></ul>
+    <div class="cc-empty" id="ccEmpty">
+      <span class="cc-empty-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <b id="ccEmptyTitle">No active sessions</b>
+      <span id="ccEmptyNote">Start Claude Code and it shows up here</span>
+    </div>
+    <span class="sr-only" id="ccLive" role="status" aria-live="polite"></span>
+  </article>
+
+  <!-- Where "Focus today" was: three cards — limits · Quick timer · Pomodoro -->
+  <div class="mid">
+    <section class="tile lim" id="limits" data-state="empty" aria-label="Claude plan limits">
+      <header class="tile-head">
+        <span class="label">Claude limits</span>
+        <span class="lim-age" id="limAge" data-level="none"><i aria-hidden="true"></i><span id="limAgeText">no data yet</span></span>
+      </header>
+      <div class="lim-row" id="lim5" data-level="none">
+        <div class="lim-top"><span class="lim-name">5 hours</span><span class="lim-pct"><b>—</b><small>%</small></span></div>
+        <div class="lim-bar"><i></i></div>
+        <div class="lim-reset">waiting for Claude Code</div>
+      </div>
+      <div class="lim-row" id="lim7" data-level="none">
+        <div class="lim-top"><span class="lim-name">7 days</span><span class="lim-pct"><b>—</b><small>%</small></span></div>
+        <div class="lim-bar"><i></i></div>
+        <div class="lim-reset"></div>
+      </div>
+    </section>
+
+    <section class="tile qt" id="quick" data-state="setup" aria-label="Quick timer">
+      <header class="tile-head">
+        <span class="label">Quick timer</span>
+        <button class="qt-sound" id="quickSound" type="button" aria-label="Sound on or off">
+          <svg viewBox="0 0 24 24" class="ico ico-on"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg>
+          <svg viewBox="0 0 24 24" class="ico ico-off"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M17 9l4 6M21 9l-4 6"/></svg>
+          <span class="on">Sound on</span><span class="off">Sound off</span>
+        </button>
+      </header>
+      <div class="qt-setup" id="quickSetup">
+        <div class="qt-pills">
+          <button class="qt-pill" type="button" data-min="5">5</button>
+          <button class="qt-pill" type="button" data-min="10">10</button>
+          <button class="qt-pill" type="button" data-min="15">15</button>
+          <button class="qt-pill" type="button" data-min="20">20</button>
+        </div>
+        <div class="qt-manual">
+          <button class="qt-step" id="quickMinus" type="button" aria-label="One minute less">−</button>
+          <div class="qt-amount"><b id="quickMinutes">10</b><span>min · 1–60</span></div>
+          <button class="qt-step" id="quickPlus" type="button" aria-label="One minute more">+</button>
+          <button class="qt-start" id="quickStart" type="button">Start</button>
+        </div>
+      </div>
+      <div class="qt-live" id="quickLive" hidden>
+        <svg class="qt-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="qt-track" cx="32" cy="32" r="27"/>
+          <circle class="qt-arc" id="quickArc" cx="32" cy="32" r="27" pathLength="100"/>
+          <path class="qt-glyph" d="M32 20v13l7 4"/>
+          <path class="qt-check" d="M21 33.5l8 8 15-17"/>
+        </svg>
+        <div class="qt-text">
+          <span class="qt-time" id="quickTime">00:00</span>
+          <span class="qt-label" id="quickLabel">Timer</span>
+        </div>
+        <button class="qt-stop" id="quickStop" type="button">Stop</button>
+      </div>
+    </section>
+
+    <button class="tile pf" id="pomoFoot" type="button" aria-label="Pomodoro, open Deep Focus">
+      <span class="pf-head"><span class="label">Pomodoro</span><span class="pf-live" id="pfLive" hidden></span></span>
+      <span class="pf-cell"><b id="pfDeep">0m</b><span>deep work time</span></span>
+      <span class="pf-cell is-right"><span class="pf-dots" id="pfDots"></span><span id="pfCount">0 pomodoros</span></span>
+    </button>
+  </div>
+
+  <!-- Mac health -->
+  <section class="tile health" id="health">
+    <div class="hl-lead" id="hlLead" data-swap="off">
+      <span class="hl-title">Mac health</span>
+      <button type="button" class="hl-seg hl-swapio" id="swapIoSeg" data-sheet="swap" aria-label="Swap details">
+        <span class="hl-row"><span class="hl-label">Swap speed</span><span class="hl-value"><span id="swapIoVal">—</span><small>MB/s</small></span></span>
+        <span class="hl-bar"><span id="swapIoBar"></span></span>
+        <span class="hl-note" id="swapIoNote">in — · out —</span>
+      </button>
+    </div>
+    <button type="button" class="hl-seg hl-swap" id="swapSeg" data-sheet="swap" aria-label="Swap details">
+      <span class="hl-row"><span class="hl-label">Swap</span><span class="hl-value"><span id="swapVal">—</span><small>GB</small></span></span>
+      <span class="hl-bar"><span id="swapBar"></span></span>
+      <span class="hl-note" id="swapNote">pressure —</span>
+    </button>
+    <button type="button" class="hl-seg" id="cpuSeg" data-sheet="cpu" aria-label="CPU details">
+      <span class="hl-row"><span class="hl-label">CPU</span><span class="hl-value"><span id="cpuVal">—</span>%</span></span>
+      <span class="hl-bar"><span id="cpuBar"></span></span>
+      <span class="hl-note" id="cpuNote">measuring</span>
+    </button>
+    <button type="button" class="hl-seg" id="ramSeg" data-sheet="memory" aria-label="Memory details">
+      <span class="hl-row"><span class="hl-label">Memory</span><span class="hl-value"><span id="ramVal">—</span>%</span></span>
+      <span class="hl-bar"><span id="ramBar"></span></span>
+      <span class="hl-note" id="ramNote">— / — GB</span>
+    </button>
+    <button type="button" class="hl-seg hl-heat" id="heatSeg" data-sheet="heat" aria-label="Heat details">
+      <span class="hl-row"><span class="hl-label">Heat</span><span class="hl-value"><span id="tempVal">—</span>°C</span></span>
+      <span class="hl-bar fan-bar"><span id="fanBar"></span></span>
+      <span class="hl-note hl-fan"><span class="fan" id="fan"><svg class="fan-blades" viewBox="0 0 48 48"><g><path d="M24 23c-1-9 1-14 6-14 4 0 6 4 3 8-2 3-6 5-9 6z"/><path d="M24 23c-1-9 1-14 6-14 4 0 6 4 3 8-2 3-6 5-9 6z" transform="rotate(120 24 24)"/><path d="M24 23c-1-9 1-14 6-14 4 0 6 4 3 8-2 3-6 5-9 6z" transform="rotate(240 24 24)"/></g><circle cx="24" cy="24" r="3.4"/></svg></span><span class="fan-state" id="fanState">—</span></span>
+    </button>
+  </section>
+
+  <!-- Now playing (Spotify) -->
+  <div class="tile strip" id="media" data-state="closed">
+    <button type="button" class="np-open" id="npOpen" aria-label="Open Now Playing">
+      <span class="np-art" id="npArt"></span>
+      <span class="np-meta">
+        <span class="np-title" id="npTitle">Spotify isn't open</span>
+        <span class="np-artist" id="npArtist">Play opens it on the Mac</span>
+      </span>
+    </button>
+    <div class="np-controls">
+      <button class="np-skip" type="button" data-cmd="media.prev" aria-label="Previous track">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M6 5v14M18 5 8 12l10 7z"/></svg>
+      </button>
+      <button class="np-play" type="button" id="npPlay" data-cmd="media.playpause" aria-label="Play or pause">
+        <svg viewBox="0 0 24 24" class="ico ico-play"><path d="M7 5v14l12-7z"/></svg>
+        <svg viewBox="0 0 24 24" class="ico ico-pause"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      </button>
+      <button class="np-skip" type="button" data-cmd="media.next" aria-label="Next track">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M18 5v14M6 5l10 7-10 7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+</section>
+
+</div>
+</div>
+
+<!-- ═══ Right panel: tasks, clock, weather, battery (stays put while pages move) ═══ -->
+<aside class="side">
+  <div class="tile tasks" id="tasks">
+    <header class="tile-head">
+      <span class="label">Tasks</span>
+      <span class="tasks-status">
+        <span class="conn" id="conn" data-on="false"><i></i><span class="sr-only" id="connText">connecting</span></span>
+        <span class="net-pulse" id="netPulse" aria-hidden="true">
+          <svg viewBox="0 0 24 24" class="ico"><path d="M4 9a15.5 15.5 0 0 1 16 0"/><path d="M7.5 13a10.7 10.7 0 0 1 9 0"/><path d="M11 17a5.8 5.8 0 0 1 2 0"/></svg>
+        </span>
+      </span>
+    </header>
+    <ul class="task-list" id="taskList"></ul>
+  </div>
+  <div class="tile time-card">
+    <div class="clock" id="clock">--:--</div>
+    <div class="date" id="dateLine">—</div>
+    <div class="time-meta">
+      <div class="weather" id="weather" data-state="none">
+        <span class="w-icon" id="wIcon"></span>
+        <span class="w-temp" id="wTemp">—</span>
+        <span class="w-city" id="wCity">Set a city</span>
+      </div>
+      <div class="batt" id="batt" hidden>
+        <svg viewBox="0 0 24 24" class="batt-bolt" id="battBolt" hidden><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+        <b id="battVal">—</b><small>%</small>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="page-dots" aria-hidden="true"><span class="page-dot"></span><span class="page-dot"></span></div>
+</div>
+
+<!-- Detail sheet (CPU / Memory / Swap / Heat): tap outside or ✕ closes -->
+<div class="scrim" id="sheetScrim" hidden>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <header class="sheet-head">
+      <div><h2 id="sheetTitle">Details</h2><p id="sheetSub"></p></div>
+      <button type="button" class="sheet-close" data-close aria-label="Close"><svg viewBox="0 0 24 24" class="ico"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </header>
+    <div class="sheet-body" id="sheetBody"></div>
+  </section>
+</div>
+
+<!-- Now Playing -->
+<div class="scrim" id="npScrim" hidden>
+  <div class="np-ambient" id="npAmbient" aria-hidden="true"></div>
+  <section class="np-screen" id="npScreen" role="dialog" aria-modal="true" aria-label="Now Playing">
+    <button type="button" class="sheet-close" data-close aria-label="Close"><svg viewBox="0 0 24 24" class="ico"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <div class="np-big-art" id="npBigArt"></div>
+    <div class="np-big-side">
+      <div class="np-big-title" id="npBigTitle">—</div>
+      <div class="np-big-artist" id="npBigArtist">—</div>
+      <div class="np-progress"><div class="np-progress-bar"><i id="npBar"></i></div>
+        <div class="np-times"><span id="npPos">0:00</span><span id="npDur">0:00</span></div></div>
+      <div class="np-big-controls">
+        <button class="np-skip big" type="button" data-cmd="media.prev" aria-label="Previous track"><svg viewBox="0 0 24 24" class="ico"><path d="M6 5v14M18 5 8 12l10 7z"/></svg></button>
+        <button class="np-play big" type="button" id="npBigPlay" data-cmd="media.playpause" aria-label="Play or pause">
+          <svg viewBox="0 0 24 24" class="ico ico-play"><path d="M7 5v14l12-7z"/></svg>
+          <svg viewBox="0 0 24 24" class="ico ico-pause"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+        </button>
+        <button class="np-skip big" type="button" data-cmd="media.next" aria-label="Next track"><svg viewBox="0 0 24 24" class="ico"><path d="M18 5v14M6 5l10 7-10 7z"/></svg></button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Mac battery 10 %: the screen flashes red 3×; 5 %: 5×, then a dark "Plug in your Mac" screen stays
+     until the Mac charges (as the original). -->
+<div class="lowbatt" id="lowBatt" hidden>
+  <div class="lowbatt-panel">
+    <svg class="lowbatt-icon" viewBox="0 0 108 52" aria-hidden="true">
+      <rect class="lowbatt-body" x="2" y="2" width="90" height="48" rx="10"/>
+      <rect class="lowbatt-nub" x="96" y="18" width="8" height="16" rx="3"/>
+      <rect class="lowbatt-fill" id="lowBattFill" x="9" y="9" width="20" height="34" rx="5"/>
+    </svg>
+    <div class="lowbatt-pct" id="lowBattPct">—%</div>
+    <div class="lowbatt-msg">Plug in your Mac</div>
+  </div>
+</div>
+
+<div class="flash" id="flash" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/logic.js"></script>
+<script src="/app.js"></script>
+<script src="/focus.js"></script>
+<script src="/sheets.js"></script>
+<script src="/standby.js"></script>
+</body>
+</html>

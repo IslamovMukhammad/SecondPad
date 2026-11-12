@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleExecutable</key>
+    <string>SecondPad</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.muhammadislamov.SecondPad</string>
+    <key>CFBundleName</key>
+    <string>SecondPad</string>
+    <key>CFBundleDisplayName</key>
+    <string>SecondPad</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>26.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.productivity</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>SecondPad reads what Spotify is playing and controls it, and during a Pomodoro focus period reads the domain of Chrome's active tab to tell work from distraction.</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Only when you press "Use This Mac's Location": the weather on the tablet uses your approximate location (rounded to about 1 km).</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Only when you press "Use This Mac's Location": the weather on the tablet uses your approximate location (rounded to about 1 km).</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Free and open source. Made by Muhammad Islamov.</string>
+</dict>
+</plist>
